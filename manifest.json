@@ -1,0 +1,21 @@
+{
+  "name": "Brandon's LinkTree",
+  "short_name": "Brandon's Apps",
+  "description": "A collection of Brandon's apps and projects",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#007AFF",
+  "orientation": "portrait-primary",
+  "scope": "./",
+  "icons": [
+    {
+      "src": "./icon.jpeg",
+      "sizes": "180x180",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["utilities", "productivity"],
+  "lang": "en-US"
+}

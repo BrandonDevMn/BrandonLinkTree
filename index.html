@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Brandon's Apps</title>
+
+    <!-- iOS PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Brandon's Apps">
+    <meta name="theme-color" content="#007AFF">
+
+    <!-- Touch Icons -->
+    <link rel="apple-touch-icon" href="./icon.jpeg">
+    <link rel="icon" type="image/jpeg" href="./icon.jpeg">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="./manifest.json">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Tab Navigation -->
+        <div class="tab-container">
+            <button class="tab-button active" data-tab="apps">
+                <span class="tab-icon">📱</span>
+                <span class="tab-label">Apps</span>
+            </button>
+            <button class="tab-button" data-tab="about">
+                <span class="tab-icon">ℹ️</span>
+                <span class="tab-label">About</span>
+            </button>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Apps Tab -->
+            <div id="apps-tab" class="tab-content active">
+                <header class="app-header">
+                    <h1>Brandon's Apps</h1>
+                </header>
+
+                <div class="apps-container">
+                    <div id="apps-list" class="apps-list">
+                        <!-- Apps will be dynamically loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Tab -->
+            <div id="about-tab" class="tab-content">
+                <header class="app-header">
+                    <h1>About</h1>
+                </header>
+
+                <div class="about-container">
+                    <div class="about-content">
+                        <img src="./icon.jpeg" alt="App Icon" class="about-icon">
+                        <h2>Brandon's LinkTree</h2>
+                        <p>A collection of my apps and projects, optimized for iOS as a Progressive Web App.</p>
+                        <div class="version-info">
+                            <p><strong>Version:</strong> 1.0.0</p>
+                            <p><strong>Last Updated:</strong> <span id="last-updated"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-spinner"></div>
+        <p>Opening app...</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="./js/data.js"></script>
+    <script src="./js/app.js"></script>
+</body>
+</html>
