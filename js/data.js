@@ -1,20 +1,6 @@
-const appsData = [
-    {
-        name: "StoryStack",
-        icon: "./icons/storystack.jpg",
-        url: "https://brandondevmn.github.io/StoryStack-Web",
-        description: "Interactive story creation app"
-    },
-    {
-        name: "EasyDice",
-        icon: "./icons/easydice.png",
-        url: "https://brandondevmn.github.io/EasyDice",
-        description: "Simple dice rolling application"
-    },
-    {
-        name: "QR Generator",
-        icon: "./icons/qrgenerator.jpg",
-        url: "https://brandondevmn.github.io/QrGenerator",
-        description: "Generate QR codes for text and URLs"
-    }
+const manifestUrls = [
+    "https://brandondevmn.github.io/StoryStack-Web/manifest.json",
+    "https://brandondevmn.github.io/EasyDice/manifest.json",
+    "https://brandondevmn.github.io/QrGenerator/manifest.json",
+    "https://brandondevmn.github.io/MysticalTeachings/manifest.json"
 ];

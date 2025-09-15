@@ -55,7 +55,7 @@ class BrandonLinkTreeApp {
     async loadApps() {
         const appsList = document.getElementById('apps-list');
 
-        if (!appsData || appsData.length === 0) {
+        if (!manifestUrls || manifestUrls.length === 0) {
             this.showEmptyState(appsList);
             return;
         }
@@ -63,16 +63,90 @@ class BrandonLinkTreeApp {
         try {
             appsList.innerHTML = '';
 
+            const appsData = await this.fetchManifestData();
+
+            if (appsData.length === 0) {
+                this.showEmptyState(appsList);
+                return;
+            }
+
             appsData.forEach((app, index) => {
                 const appElement = this.createAppElement(app, index);
                 appsList.appendChild(appElement);
             });
 
-            this.preloadIcons();
+            this.preloadIcons(appsData);
         } catch (error) {
             console.error('Error loading apps:', error);
             this.showErrorState(appsList, 'Failed to load apps');
         }
+    }
+
+    async fetchManifestData() {
+        const appsData = [];
+
+        for (const manifestUrl of manifestUrls) {
+            try {
+                const response = await fetch(manifestUrl);
+                if (!response.ok) {
+                    console.warn(`Failed to fetch manifest: ${manifestUrl}`);
+                    continue;
+                }
+
+                const manifest = await response.json();
+
+                // Extract app data from manifest
+                const appData = {
+                    name: manifest.name || manifest.short_name || 'Unknown App',
+                    icon: this.getBestIcon(manifest, manifestUrl),
+                    url: this.getAppUrl(manifestUrl),
+                    description: manifest.description || ''
+                };
+
+                appsData.push(appData);
+            } catch (error) {
+                console.warn(`Error processing manifest ${manifestUrl}:`, error);
+            }
+        }
+
+        return appsData;
+    }
+
+    getBestIcon(manifest, manifestUrl) {
+        if (!manifest.icons || manifest.icons.length === 0) {
+            return null;
+        }
+
+        // Sort icons by size to get the largest one
+        const sortedIcons = manifest.icons.sort((a, b) => {
+            const aSize = this.parseIconSize(a.sizes);
+            const bSize = this.parseIconSize(b.sizes);
+            return bSize - aSize;
+        });
+
+        const bestIcon = sortedIcons[0];
+        const baseUrl = manifestUrl.substring(0, manifestUrl.lastIndexOf('/'));
+
+        // Handle relative URLs
+        if (bestIcon.src.startsWith('/')) {
+            const urlObj = new URL(manifestUrl);
+            return `${urlObj.protocol}//${urlObj.host}${bestIcon.src}`;
+        } else if (bestIcon.src.startsWith('http')) {
+            return bestIcon.src;
+        } else {
+            return `${baseUrl}/${bestIcon.src}`;
+        }
+    }
+
+    parseIconSize(sizes) {
+        if (!sizes || sizes === 'any') return 512;
+        const match = sizes.match(/(\d+)x\d+/);
+        return match ? parseInt(match[1]) : 64;
+    }
+
+    getAppUrl(manifestUrl) {
+        // Extract the base URL from the manifest URL
+        return manifestUrl.substring(0, manifestUrl.lastIndexOf('/'));
     }
 
     createAppElement(app, index) {
@@ -146,10 +220,12 @@ class BrandonLinkTreeApp {
         imgElement.alt = 'App icon placeholder';
     }
 
-    preloadIcons() {
+    preloadIcons(appsData) {
         appsData.forEach(app => {
-            const img = new Image();
-            img.src = app.icon;
+            if (app.icon) {
+                const img = new Image();
+                img.src = app.icon;
+            }
         });
     }
 

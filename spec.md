@@ -15,11 +15,11 @@ A simple, iOS-optimized Progressive Web App that displays a collection of Brando
 - Offline support with service worker caching
 
 ### App Data Structure
-Each app entry contains:
-- `name`: Display name of the external app
-- `icon`: Path to locally stored app icon image
-- `url`: External URL to navigate to (e.g., https://brandondevmn.github.io/StoryStack-Web)
-- `description` (optional): Brief description of the external app
+App data is dynamically loaded from PWA manifest files. The system fetches manifest.json files from configured URLs and extracts:
+- `name`: Display name from manifest.name or manifest.short_name
+- `icon`: Best available icon from manifest.icons array (largest size selected)
+- `url`: Base URL derived from manifest location
+- `description`: Description from manifest.description field
 
 ## User Interface
 
@@ -60,44 +60,27 @@ Each app entry contains:
 ├── js/
 │   ├── app.js         # Main application logic
 │   └── data.js        # App data configuration
-└── icons/             # App icons directory
-    ├── storystack.jpg
-    ├── easydice.png
-    ├── portfolio.jpg
-    ├── github.jpg
-    └── .gitkeep
+└── icons/             # Local icons directory (deprecated)
+    └── .gitkeep       # Icons now sourced from app manifests
 ```
 
 ### Data Configuration
-Apps data stored in `js/data.js`:
+Manifest URLs stored in `js/data.js`:
 ```javascript
-const appsData = [
-    {
-        name: "StoryStack",
-        icon: "./icons/storystack.jpg",
-        url: "https://brandondevmn.github.io/StoryStack-Web",
-        description: "Interactive story creation app"
-    },
-    {
-        name: "EasyDice",
-        icon: "./icons/easydice.png",
-        url: "https://brandondevmn.github.io/EasyDice",
-        description: "Simple dice rolling application"
-    },
-    {
-        name: "Portfolio",
-        icon: "./icons/portfolio.jpg",
-        url: "https://brandoncarlson.dev",
-        description: "Personal portfolio and blog"
-    },
-    {
-        name: "GitHub",
-        icon: "./icons/github.jpg",
-        url: "https://github.com/brandondevmn",
-        description: "View my open source projects"
-    }
+const manifestUrls = [
+    "https://brandondevmn.github.io/StoryStack-Web/manifest.json",
+    "https://brandondevmn.github.io/EasyDice/manifest.json",
+    "https://brandondevmn.github.io/QrGenerator/manifest.json",
+    "https://brandondevmn.github.io/MysticalTeachings/manifest.json"
 ];
 ```
+
+### Dynamic Manifest Loading
+The app dynamically fetches each manifest.json file and extracts:
+- App metadata (name, description, icons)
+- Selects the best available icon (largest size)
+- Handles relative and absolute icon URLs
+- Gracefully handles failed manifest fetches
 
 ### Navigation Behavior
 - Tap on app row opens external URL in same window (window.location.href)
@@ -106,10 +89,12 @@ const appsData = [
 - Loading indicators during navigation to external sites
 
 ### Error Handling
-- Graceful handling of missing icons (fallback icon)
-- Network error handling for external URLs
+- Graceful handling of failed manifest fetches
+- Fallback SVG icon for missing or invalid icons
+- Network error handling for external URLs and manifests
 - Offline functionality with cached content
 - User feedback for failed navigation attempts
+- Continues loading other apps if individual manifests fail
 
 ## PWA Features
 
@@ -169,10 +154,12 @@ const appsData = [
 - Vanilla JavaScript (no frameworks)
 - CSS Grid responsive layout for larger screens
 - iOS safe area support for devices with notches
+- Dynamic manifest fetching and icon resolution
 - Icon lazy loading with SVG fallbacks
 - Cache versioning and automatic updates
 - ARIA labels and semantic HTML structure
 - Touch event optimization for mobile devices
+- Intelligent icon selection from manifest.icons array
 
 ## Future Enhancements
 
